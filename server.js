@@ -12,6 +12,9 @@ const port = process.env.PORT || 5001;
 //     res.sendFile(path.join(__dirname, 'public','index.html'));
 // });
 
+app.use(express.json());
+
+app.use(express.urlencoded({ extended: false }));
 
 // app.get('/about', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'public','about.html'));

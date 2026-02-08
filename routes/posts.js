@@ -43,4 +43,72 @@ router.get('/:id', (req, res) => {
     res.status(200).json({ post: post, message: 'Post retrieved successfully' });
 });
 
+
+// Store a new post
+router.post('/', (req, res) => {
+    const { title, content } = req.body;
+
+    if(!title || !content){
+        return res.status(400).json({ error: 'Title and content are required' });
+    }
+
+    const newPost = {
+        id: posts.length + 1,
+        title: title,
+        content: content
+    };
+
+    posts.push(newPost);
+
+    res.status(201).json({ post: newPost, message: 'Post created successfully' });
+
+    
+})
+
+router.put('/:id', (req, res) => {
+    const postId = parseInt(req.params.id);
+
+    if (isNaN(postId)) {
+        return res.status(400).json({ error: 'Invalid post ID' });
+    }
+
+    let post = posts.find(p => p.id === postId);
+
+    if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+    }
+
+    const { title, content } = req.body;
+
+    if (!title || !content) {
+        return res.status(400).json({ error: 'Title and content are required' });
+    }
+
+    post.title = title;
+    post.content = content;
+
+    res.status(200).json({ post, message: 'Post updated successfully' });
+});
+
+router.delete('/:id', (req, res) => {
+    const postId = parseInt(req.params.id);
+
+    if (isNaN(postId)) {
+        return res.status(400).json({ error: 'Invalid post ID' });
+    }
+
+    const postIndex = posts.findIndex(p => p.id === postId);
+
+    if (postIndex === -1) {
+        return res.status(404).json({ error: 'Post not found' });
+    }
+
+    const deletedPost = posts[postIndex];
+    posts.splice(postIndex, 1);
+
+    res.status(200).json({ post: deletedPost, message: 'Post deleted successfully' });
+});
+
+
+
 export default router;
