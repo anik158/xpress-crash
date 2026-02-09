@@ -1,8 +1,8 @@
 import express from 'express';
 import path from 'path';
-
+import logger from './middleware/logger.js';
 import postsRouter from './routes/posts.js';
-
+import errorHandler from './middleware/errorMiddleware.js';
 
 const app = express(); 
 
@@ -16,6 +16,10 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: false }));
 
+//  Logger middleware
+app.use(logger);
+
+app.use(errorHandler);
 // app.get('/about', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'public','about.html'));
 // });

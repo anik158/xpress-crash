@@ -1,6 +1,7 @@
 import express from 'express';
 const router = express.Router();
 
+
 const posts = [
   { id: 1,title: 'Post 1', content: 'This is the content of post 1' },
   { id: 2,title: 'Post 2', content: 'This is the content of post 2' },
@@ -8,9 +9,10 @@ const posts = [
 ];
 
 
+
+
 //  Get all posts
 router.get('/', (req, res) => {
-
     const limit = parseInt(req.query.limit);
 
     let limitMsg = '';
@@ -28,16 +30,18 @@ router.get('/', (req, res) => {
 })
 
 // Get a specific post
-router.get('/:id', (req, res) => {
+router.get('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);
 
     if(isNaN(postId)){
         return res.status(400).json({ error: 'Invalid post ID' });
     }
-    const post = posts.filter(p => p.id === postId);
+    const post = posts.find(p => p.id === postId);
 
-    if(post.length === 0){
-        return res.status(404).json({ error: 'Post not found' });
+    if(!post){
+        let msg = `Post with ID ${postId} not found.`;
+        const error = new Error(msg);
+        return next(error);
     }
 
     res.status(200).json({ post: post, message: 'Post retrieved successfully' });
