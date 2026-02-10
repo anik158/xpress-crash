@@ -19,7 +19,6 @@ app.use(express.urlencoded({ extended: false }));
 //  Logger middleware
 app.use(logger);
 
-app.use(errorHandler);
 // app.get('/about', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'public','about.html'));
 // });
@@ -28,6 +27,9 @@ app.use(errorHandler);
 // app.use(express.static(path.join(__dirname,'public')))
 
 app.use("/api/posts",postsRouter);
+
+
+app.use(errorHandler);
 
 
 
