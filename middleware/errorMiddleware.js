@@ -1,5 +1,11 @@
 const errorHandler = (err, req, res, next) => {
-    res.status(404).json({ msg: 'Not Found' });
+
+    if(err.status){
+        res.status(err.status).json({msg: err.message});
+    }else{
+    res.status(500).json({ msg: 'Not Found' });
+
+    }
 }
 
 export default errorHandler;

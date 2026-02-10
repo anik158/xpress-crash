@@ -3,6 +3,7 @@ import path from 'path';
 import logger from './middleware/logger.js';
 import postsRouter from './routes/posts.js';
 import errorHandler from './middleware/errorMiddleware.js';
+import notFoundMiddleware from './middleware/notFound.js';
 
 const app = express(); 
 
@@ -30,6 +31,9 @@ app.use("/api/posts",postsRouter);
 
 
 app.use(errorHandler);
+
+
+app.use(notFoundMiddleware);
 
 
 

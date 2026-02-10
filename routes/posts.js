@@ -12,7 +12,7 @@ const posts = [
 
 
 //  Get all posts
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
     const limit = parseInt(req.query.limit);
 
     let limitMsg = '';
@@ -41,6 +41,7 @@ router.get('/:id', (req, res, next) => {
     if(!post){
         let msg = `Post with ID ${postId} not found.`;
         const error = new Error(msg);
+        error.status = 404;
         return next(error);
     }
 
@@ -49,11 +50,14 @@ router.get('/:id', (req, res, next) => {
 
 
 // Store a new post
-router.post('/', (req, res) => {
+router.post('/', (req, res, next) => {
     const { title, content } = req.body;
 
     if(!title || !content){
-        return res.status(400).json({ error: 'Title and content are required' });
+        let msg = `Title and content are required`;
+        const error = new Error(msg);
+        error.status = 400;
+        return next(error);
     }
 
     const newPost = {
@@ -64,47 +68,63 @@ router.post('/', (req, res) => {
 
     posts.push(newPost);
 
-    res.status(201).json({ post: newPost, message: 'Post created successfully' });
+    res.status(200).json({ post: newPost, message: 'Post created successfully' });
 
     
 })
 
-router.put('/:id', (req, res) => {
+router.put('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);
 
     if (isNaN(postId)) {
-        return res.status(400).json({ error: 'Invalid post ID' });
+        let msg = `Invalid post ID`;
+        const error = new Error(msg);
+        error.status = 400;
+        return next(error);
     }
 
     let post = posts.find(p => p.id === postId);
 
     if (!post) {
-        return res.status(404).json({ error: 'Post not found' });
+        let msg = `Post with ID ${postId} not found.`;
+        const error = new Error(msg);
+        error.status = 404;
+        return next(error);
     }
 
     const { title, content } = req.body;
 
     if (!title || !content) {
-        return res.status(400).json({ error: 'Title and content are required' });
+        let msg = `Title and content are required`;
+        const error = new Error(msg);
+        error.status = 400;
+        return next(error);
     }
 
     post.title = title;
     post.content = content;
 
-    res.status(200).json({ post, message: 'Post updated successfully' });
+    res.status(201).json({ post, message: 'Post updated successfully' });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', (req, res, next) => {
     const postId = parseInt(req.params.id);
 
     if (isNaN(postId)) {
-        return res.status(400).json({ error: 'Invalid post ID' });
+        let msg = `Invalid post ID`;
+        const error = new Error(msg);
+        error.status = 400;
+        return next(error);
     }
 
     const postIndex = posts.findIndex(p => p.id === postId);
 
     if (postIndex === -1) {
-        return res.status(404).json({ error: 'Post not found' });
+
+        let msg = `Post with ID ${postId} not found.`;
+        const error = new Error(msg);
+        error.status = 404;
+        return next(error);
     }
 
     const deletedPost = posts[postIndex];
