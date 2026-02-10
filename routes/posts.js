@@ -1,4 +1,5 @@
 import express from 'express';
+import logger from "../middleware/logger.js";
 const router = express.Router();
 
 
@@ -12,7 +13,7 @@ const posts = [
 
 
 //  Get all posts
-router.get('/', (req, res, next) => {
+router.get('/', logger ,(req, res, next) => {
     const limit = parseInt(req.query.limit);
 
     let limitMsg = '';
@@ -30,7 +31,7 @@ router.get('/', (req, res, next) => {
 })
 
 // Get a specific post
-router.get('/:id', (req, res, next) => {
+router.get('/:id', logger, (req, res, next) => {
     const postId = parseInt(req.params.id);
 
     if(isNaN(postId)){
@@ -50,7 +51,7 @@ router.get('/:id', (req, res, next) => {
 
 
 // Store a new post
-router.post('/', (req, res, next) => {
+router.post('/', logger, (req, res, next) => {
     const { title, content } = req.body;
 
     if(!title || !content){
@@ -73,7 +74,7 @@ router.post('/', (req, res, next) => {
     
 })
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', logger, (req, res, next) => {
     const postId = parseInt(req.params.id);
 
     if (isNaN(postId)) {
@@ -107,7 +108,7 @@ router.put('/:id', (req, res, next) => {
     res.status(201).json({ post, message: 'Post updated successfully' });
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', logger, (req, res, next) => {
     const postId = parseInt(req.params.id);
 
     if (isNaN(postId)) {
