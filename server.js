@@ -1,17 +1,21 @@
 import express from 'express';
 import path from 'path';
+import {fileURLToPath} from 'url';
 import logger from './middleware/logger.js';
 import postsRouter from './routes/posts.js';
 import errorHandler from './middleware/errorMiddleware.js';
 import notFoundMiddleware from './middleware/notFound.js';
 
-const app = express(); 
+const app = express();
+
+const filePath = fileURLToPath(import.meta.url);
+console.log(filePath);
+
+const dirName = path.dirname(filePath);
+
+
 
 const port = process.env.PORT || 5001;
-
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'public','index.html'));
-// });
 
 app.use(express.json());
 
@@ -20,12 +24,8 @@ app.use(express.urlencoded({ extended: false }));
 //  Logger middleware
 app.use(logger);
 
-// app.get('/about', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'public','about.html'));
-// });
-
 // static web server
-// app.use(express.static(path.join(__dirname,'public')))
+app.use(express.static(path.join(dirName,'public')))
 
 app.use("/api/posts",postsRouter);
 
